@@ -1,0 +1,14 @@
+/*@tailwind base;*/
+/*@tailwind components;*/
+/*@tailwind utilities;*/
+
+.card .table td, .card .table th{
+    vertical-align: middle;
+}
+
+.btn-delete-icon {
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    background-color: transparent;
+}
