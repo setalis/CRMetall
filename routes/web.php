@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CashController;
 use App\Http\Controllers\OperationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -8,12 +9,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
+Route::get('/', function () {
+    return view('admin.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/admin', function () {
@@ -52,8 +53,20 @@ Route::middleware('auth')->group(function () {
     Route::get('admin/cart/{cart}/edit', [CartController::class, 'edit'])->name('cart.edit');
     Route::patch('admin/cart/{cart}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('admin/cart/{cart}', [CartController::class, 'destroy'])->name('cart.delete');
-    Route::post('admin/cart', [CartController::class, 'deleteItem'])->name('cart.delete-item');
+    Route::get('admin/cart/delete-item/', [CartController::class, 'deleteItem'])->name('cart.delete-item');
     Route::get('add-to-cart', [CartController::class, 'addProductToCart'])->name('add.product');
+
+    // ------------------ Storage ---------------- //
+    Route::get('admin/stock', [ProductController::class, 'stock'])->name('stock.index');
+    Route::get('admin/stock/{id}/reset', [ProductController::class, 'resetCount'])->name('stock.reset');
+
+    // ------------------ Cash ---------------- //
+    Route::get('admin/cash', [CashController::class, 'index'])->name('cash.index');
+    Route::post('admin/cash', [CashController::class, 'store'])->name('cash.store');
+    Route::get('admin/cash/{item}/edit', [CashController::class, 'edit'])->name('cash.edit');
+    Route::patch('admin/cash/{item}', [CashController::class, 'update'])->name('cash.update');
+    Route::delete('admin/cash/{item}', [CashController::class, 'destroy'])->name('cash.delete');
+
 });
 
 Route::middleware('auth')->group(function () {

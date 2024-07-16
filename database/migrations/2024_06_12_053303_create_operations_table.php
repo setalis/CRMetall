@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('operations', function (Blueprint $table) {
             $table->id();
             $table->string('type');
-            $table->foreignId('user_id')->constrained()->nullOnDelete();
-            $table->foreignId('cart_id')->constrained()->cascadeOnDelete();
-            $table->string('products');
-            $table->decimal('sum',10,2);
+            $table->foreignId('user_id')->nullable();
+            $table->foreignId('cart_id')->nullable();
+            $table->string('products')->nullable();
+            $table->decimal('sum',10,2)->nullable();
             $table->text('comment')->nullable(true);
             $table->tinyInteger('status')->nullable(false)->default(0);
             $table->timestamps();

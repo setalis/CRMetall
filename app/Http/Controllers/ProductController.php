@@ -141,4 +141,18 @@ class ProductController extends Controller
         Storage::disk('public')->delete('images/'.$currentImage);
         return redirect()->route('products.index');
     }
+
+    public function stock()
+    {
+        $products = Product::query()->get();
+        return view('stock.index', compact('products'));
+    }
+    public function resetCount($id)
+    {
+        
+        $product = Product::find($id);
+        $product->count = 0;
+        $product->save();
+        return redirect()->route('stock.index');
+    }
 }

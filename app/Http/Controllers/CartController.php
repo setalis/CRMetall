@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Cash;
+use App\Models\Operation;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use JetBrains\PhpStorm\NoReturn;
 
 class CartController extends Controller
 {
@@ -18,7 +19,10 @@ class CartController extends Controller
      */
     public function index()
     {
-        return view('cart.index');
+        $carts = Cart::query()
+            ->latest()
+            ->paginate(10);
+        return view('cart.index', compact('carts'));
     }
 
     /**
@@ -35,7 +39,6 @@ class CartController extends Controller
 
         session()->put('currentCartId', $cartId);
 
-//        dd(session()->all());
         $products = Product::query()->where('is_published', 'on')->get();
         return view('cart.create', compact('products', 'cartId'));
     }
@@ -45,28 +48,89 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-
         $user_id = $request->user_id;
         $type = $request->type;
         $client = $request->client;
+        $uniq_id = $request->uniq_id;
+        $product_id = $request->product_id;
         $name = $request->name;
         $price = $request->price;
         $dirt = $request->dirt;
+        $weight = $request->weight;
+        $weight_stock = $request->weight_stock;
         $sum = $request->sum;
-        $cartId = $request->cartId;
+        $sumCart = $request->summaryCart;
+        $cart_id = $request->cartId;
+        $comment = $request->comment;
+        $status = $request->status;
+//        dd($request, $user_id, $type, $uniq_id, $product_id, $name);
+
+        $operation = Operation::create([
+            'type' => $type,
+            'user_id' => $user_id,
+            'cart_id' => $cart_id,
+            'products' => '',
+            'sum' => $sumCart,
+            'comment' => $comment,
+            'status' => $status,
+        ]);
 
         for($i = 0; $i < count($name); $i++){
-            $data = [
-                'cartId' => $cartId,
+
+            $cart = Cart::create([
+                'operation_id' => $operation->id,
+                'product_id' => $product_id[$i],
+                'uniq_id' => $uniq_id[$i],
+                'cart_id' => $cart_id,
                 'name' => $name[$i],
                 'price' => $price[$i],
                 'dirt' => $dirt[$i],
+                'weight' => $weight[$i],
+                'weight_stock' => $weight_stock[$i],
                 'sum' => $sum[$i],
-            ];
-            dump($request);
+            ]);
+//            dd($cart);
+            $product = Product::find($product_id[$i]);
+
+            if($type == 1){
+                $product->count = $product->count + $cart->weight_stock;
+            }
+            if($type == 2){
+                $product->count = $product->count - $cart->weight_stock;
+            }
+            $product->save();
+
+
         }
 
-        dd($name, $price, $dirt, $sum);
+        $cash_last = Cash::all()->last();
+        $summary_cash = 0;
+        if($cash_last){
+            if($type == 2){
+                $summary_cash = $cash_last->summary_cash + $sumCart;
+            } elseif($type == 1) {
+                $summary_cash = $cash_last->summary_cash - $sumCart;
+            }
+        } else{
+            if ($type == 2){
+                $summary_cash = $sumCart;
+            } elseif($type == 1) {
+                $summary_cash = -$sumCart;
+            }
+
+        }
+
+        $cash = Cash::create([
+            'type_operation' => $type,
+            'sum_operation' => $sumCart,
+            'summary_cash' => $summary_cash,
+            'operation_id' => $operation->id,
+        ]);
+
+        $operations = Operation::query()
+            ->latest()
+            ->paginate(10);
+        return redirect('/admin/operation')->with('operations');
     }
 
     /**
@@ -104,7 +168,8 @@ class CartController extends Controller
     public function addProductToCart(Request $request)
     {
         $uuid = (string) Str::uuid();
-
+        $cart = session('cart', []);
+//        dd($cart);
         $data = $request->validate([
             'id' => '',
         ]);
@@ -130,21 +195,34 @@ class CartController extends Controller
         return redirect()->back();
     }
 
-    public function deleteItem(Request $request)
+    public function deleteItem($id)
     {
-        $idItem = $request->validate([
-            'id-item' => ''
-        ]);
-        if($idItem) {
-//            $currentCartId = session()->get('currentCartId');
+    dd($id);
+        if($id){
             $cart = session()->get('cart');
-//            dd($cart, $idItem['id-item']);
-//            dd(isset($cart[$idItem['id-item']]));
-            if(isset($cart[$idItem['id-item']])) {
-                unset($cart[$idItem['id-item']]);
+
+            if(isset($cart[$id])) {
+                unset($cart[$id]);
                 session()->put('cart', $cart);
             }
+            session()->flash('success', 'Product successfully deleted.');
         }
+
+
+
+
+//        dump(session()->get('cart'));
+//        dd(session()->get('cart'));
+//        if($idItem) {
+//            $currentCartId = session()->get('currentCartId');
+//            $cart = session()->get('cart');
+//            dd($cart, $idItem['id-item']);
+//            dd(isset($cart[$idItem['id-item']]));
+//            if(isset($cart[$idItem['id-item']])) {
+//                unset($cart[$idItem['id-item']]);
+//                session()->put('cart', $cart);
+//            }
+//        }
         return redirect()->back();
     }
 }

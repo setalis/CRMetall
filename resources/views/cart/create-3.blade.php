@@ -11,6 +11,7 @@
                             @php
                                 $value = session('cart');
                             @endphp
+                            @dump(session()->all())
                             <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#cartModal">
                                 <i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart <span class="badge text-bg-danger" id="cart-quantity">{{(($value)) ? count($value) : 0 }}</span>
                             </button>
@@ -63,7 +64,7 @@
                             <div class="row g-3">
                                 <div>
                                     <label for="type" class="form-label">Менеджер: {{ Auth::user()->name }}</label>
-                                    <input class="form-control cartId" type="hidden" placeholder="Менеджер" value = "{{ Auth::user()->id }}" aria-label="default input example" name = "user_id">
+                                    <input class="form-control" type="hidden" placeholder="Менеджер" value = "{{ Auth::user()->id }}" aria-label="default input example" name = "user_id">
                                 </div>
                                 <div>
                                     <input class="form-control cartId" type="text" placeholder="ID заказа" value = "{{ $cartId }}" aria-label="default input example" name = "cartId">
@@ -109,31 +110,27 @@
                                     @foreach(session('cart') as $id => $item)
                                         <tr id = "{{ $id }}" >
                                             <th>
-                                                <input type="text" class="form-control" id="name" placeholder="Наименование" value="{{ $item['name'] }}" name="name[]" required readonly>
+                                                <input type="text" class="form-control name" id="" placeholder="Наименование" value="{{ $item['name'] }}" name="name[]" required readonly>
                                             </th>
                                             <th>
-                                                <input type="number" oninput="changeInput(this)" class="form-control" id="price" placeholder="Цена" value="{{ $item['price_buy'] }}" name="price[]" step="0.1" required>
+                                                <input type="number" oninput="changeInput(this)" class="form-control price" id="" placeholder="Цена" value="{{ $item['price_buy'] }}" name="price[]" step="0.1" required>
                                             </th>
                                             <th>
-                                                <input type="number" oninput="changeInput(this)" class="form-control" id="weight" placeholder="Вес" value ="0" name="weight[]" min="1">
+                                                <input type="number" oninput="changeInput(this)" class="form-control weight" id="" placeholder="Вес" value ="0" name="weight[]" min="1">
                                             </th>
                                             <th>
-                                                <input type="number"oninput="changeInput(this)"  class="form-control" id="dirt" placeholder="Засор" value ="{{ $item['dirt'] }}" name="dirt[]">
+                                                <input type="number"  class="form-control dirt" id="" placeholder="Засор" value ="{{ $item['dirt'] }}" name="dirt[]">
                                             </th>
                                             <th>
                                                 <input type="number" class="form-control sum" id="sum" placeholder="Сумма" value ="0" min="1" step="0.1" required name="sum[]"  >
                                             </th>
                                             <th>
-                                                <form action="{{ route('cart.delete-item') }} " method="post">
-                                                    @csrf
-                                                    <input type="hidden" name = "id-item" value = "{{ $id }}">
-                                                    <button type="submit" class = "btn-delete-icon">
+                                                    <a onclick="removeItemsCart(this)" class = "btn-delete-icon delete-item" id = "del{{$id}}">
                                                         <svg width="22px" height="22px" xmlns="http://www.w3.org/2000/svg" fill=#ff102f class="bi bi-trash" viewBox="0 0 20 20">
                                                             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
                                                             <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
                                                         </svg>
-                                                    </button>
-                                                </form>
+                                                    </a>
                                             </th>
                                         </tr>
                                     @endforeach
@@ -172,28 +169,41 @@
             </form>
         </div>
     </div>
-    <script>
-        const priceItem = document.querySelector('#price');
-        const dirtItem = document.querySelector('#dirt');
-        const weightItem = document.querySelector('#weight');
+    <script type="text/javascript">
+
+
+
+        // / const priceItem = document.querySelector('#price');
+        // const dirtItem = document.querySelector('#dirt');
+        // const weightItem = document.querySelector('#weight');
+
+        // let sumItem = document.querySelector('#sum');
+        // let sumCart = document.querySelector('.sumCart');
+        // let itemsCart = [];
+        // let price = Number(priceItem.value);
+        // let weight = Number(weightItem.value);
+        // let dirt = '';
+
+        // console.log(currentCartIdHtml)
+        // localStorage.setItem('currentCartId', currentCartId);
+
         const currentCartIdHtml = document.querySelector('.cartId');
-        let sumItem = document.querySelector('#sum');
-        let sumCart = document.querySelector('.sumCart');
-        let itemsCart = [];
-        let price = Number(priceItem.value);
-        let weight = Number(weightItem.value);
-        let dirt = '';
         let currentCartId = currentCartIdHtml.value;
         localStorage.setItem('currentCartId', currentCartId);
-        let itemsCurrentCart = [];
-        // if(localStorage.getItem('itemsCurrentCart')){
-        //     itemsCurrentCart = localStorage.getItem('itemsCurrentCart');
-        // } else {
-        //    itemsCurrentCart = [];
-        // }
+        // console.log(currentCartId);
 
+        // Переменная для товаров в текущей корзине //
+        let itemsCurrentCart;
+
+        if(localStorage.getItem('itemsCurrentCart')){
+            itemsCurrentCart = localStorage.getItem('itemsCurrentCart');
+        } else {
+           itemsCurrentCart = [];
+           localStorage.setItem('itemsCurrentCart', JSON.stringify(itemsCurrentCart));
+        }
 
         // console.log(currentCartId, itemsCart);
+
         function renderCartItem(){
             if(localStorage.getItem('itemsCurrentCart')){
                 itemsCurrentCart = JSON.parse(localStorage.getItem('itemsCurrentCart'));
@@ -201,18 +211,18 @@
             itemsCurrentCart.forEach((item) =>{
                 let product = document.getElementById(item);
                 let currentItem = JSON.parse(localStorage.getItem(item));
-                let weight = product.querySelector('#weight');
-                price = product.querySelector('#price');
-                dirt = product.querySelector('#dirt');
-                let sum = product.querySelector('#sum')
+                let weight = product.querySelector('.weight');
+                let price = product.querySelector('.price');
+                let dirt = product.querySelector('.dirt');
+                let sum = product.querySelector('.sum')
                 weight.value = currentItem[0].weight;
                 dirt.value = currentItem[0].dirt;
                 price.value = currentItem[0].price;
                 sum.value = currentItem[0].sumItem;
-                console.log(itemsCart, product, weight, price, dirt);
+                // console.log(product, weight, price, dirt);
             })
             totalCartSum()
-            console.log(itemsCart);
+            // console.log(itemsCart);
             // if(localStorage.getItem(currentCartId) !== null){
             //     let $currentItem = JSON.parse(localStorage.getItem(currentCartId));
             //     let item = document.querySelector(`#${currentCartId}`);
@@ -228,11 +238,11 @@
         renderCartItem();
 
         function changeInput(elem){
-            itemsCart = [];
+            let itemsCart = [];
             if(localStorage.getItem('itemsCurrentCart')){
                 itemsCurrentCart = JSON.parse(localStorage.getItem('itemsCurrentCart'));
             }
-            console.log(itemsCurrentCart)
+            // console.log(itemsCurrentCart)
             let rowItem = elem.closest("tr");
             let rowId = rowItem.id;
             console.log(itemsCurrentCart, rowId);
@@ -243,10 +253,10 @@
             }
 
             localStorage.setItem('itemsCurrentCart', JSON.stringify(itemsCurrentCart));
-            weight = rowItem.querySelector('#weight');
-            price = rowItem.querySelector('#price');
-            dirt = rowItem.querySelector('#dirt');
-            sumItem = rowItem.querySelector('#sum');
+            weight = rowItem.querySelector('.weight');
+            price = rowItem.querySelector('.price');
+            dirt = rowItem.querySelector('.dirt');
+            sumItem = rowItem.querySelector('.sum');
             subTotal(price, weight, dirt, sumItem);
 
             // save localstorage inputs
@@ -268,6 +278,10 @@
             sumItem.value = price * (weight - ((weight/100) * dirt));
             // console.log(sumItem.value);
             totalCartSum()
+        }
+
+        function removeItemsCart(elem) {
+
         }
 
         function totalCartSum(){

@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
-            $table->integer('operation_id')->nullable();
-            $table->string('cartId')->nullable();
+            $table->foreignId('operation_id')->nullable()->constrained()->onDelete('cascade');
+            $table->string('cart_id')->nullable();
+            $table->string('uniq_id')->nullable();
+            $table->string('product_id')->nullable();
             $table->string('name')->nullable();
             $table->string('price')->nullable();
             $table->string('dirt')->nullable();
+            $table->string('weight')->nullable();
+            $table->string('weight_stock')->nullable();
             $table->string('sum')->nullable();
             $table->timestamps();
         });

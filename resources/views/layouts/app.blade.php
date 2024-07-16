@@ -27,7 +27,7 @@
 
         <!-- Notyf -->
         <link type="text/css" href="../../../vendor/notyf/notyf.min.css" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <!-- Volt CSS -->
 {{--        <link type="text/css" href="../../../css/volt.css" rel="stylesheet">--}}
 
