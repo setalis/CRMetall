@@ -134,14 +134,17 @@ class OperationController extends Controller
         $cash->sum_operation = floatval($operation->sum);
         $cash->summary_cash = $cash->summary_cash + $difference_cash;
         $cash->type_operation = $type;
-//        if($type == 1){
-//            $cash->summary_cash = $cash->summary_cash + $difference_cash;
-//        } elseif($type == 2){
-//            $cash->summary_cash = $cash->summary_cash - $difference_cash;
-//        }
-
-
         $cash->save();
+
+        $cash_all = Cash::query()->where('id', '>', $cash->id)->get();
+        foreach ($cash_all as $item){
+            dump($difference_cash);
+            $item->summary_cash = $item->summary_cash + $difference_cash;
+            $item->save();
+        }
+//        dd($cash_all);
+
+
 
         $operations = Operation::query()
             ->latest()

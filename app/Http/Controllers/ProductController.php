@@ -34,6 +34,7 @@ class ProductController extends Controller
     public function store(Request $request): RedirectResponse
     {
 //        dd($request);
+
         $data = request()->validate([
             'name'=> 'required|unique:products|max:255',
             'price_buy' => 'required',
@@ -149,7 +150,7 @@ class ProductController extends Controller
     }
     public function resetCount($id)
     {
-        
+
         $product = Product::find($id);
         $product->count = 0;
         $product->save();

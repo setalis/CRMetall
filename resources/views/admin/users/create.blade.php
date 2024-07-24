@@ -47,19 +47,12 @@
                                         </span>
                                     </div>
                                 </div>
-{{--                                <x-input-label for="password" :value="__('Password')" />--}}
-
-{{--                                <x-text-input id="password" class="form-control"--}}
-{{--                                              type="password"--}}
-{{--                                              name="password"--}}
-{{--                                              required autocomplete="new-password" />--}}
-
                                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
                             </div>
 
                             <!-- Confirm Password -->
                             <div class="mt-4">
-                                <x-input-label for="password_confirmation" :value="__('11 Confirm Password')" />
+                                <label for="password_confirmation" class="col-sm-4 col-form-label">Confirm Password</label>
 
                                 <x-text-input id="password_confirmation" class="form-control"
                                               type="password"
@@ -68,13 +61,23 @@
                                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                             </div>
 
+                            <div class="mb-3">
+                                <label for="roles">Роли</label>
+                                <select name="roles[]" class="form-control" multiple id="roles">
+                                    <option value="">Выбрать роль</option>
+                                    @foreach($roles as $role)
+                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <div class="flex items-center justify-end mt-4">
                                 <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                                    {{ __('Already registered?') }}
+                                    {{ __('Войти') }}
                                 </a>
 
                                 <x-primary-button class="ms-4">
-                                    {{ __("Add user") }}
+                                    {{ __("Добавить пользователя") }}
                                 </x-primary-button>
                             </div>
                         </div>

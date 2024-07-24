@@ -5,6 +5,12 @@
             Создать пользователя</a>
         </a>
     </div>
+    @if(session('status'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('status') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     <div>
         <div class="card border-0 shadow mb-4">
             <div class="card-body">
@@ -13,6 +19,7 @@
                     <thead>
                         <th>Имя</th>
                         <th>Email</th>
+                        <th>Роли</th>
                         <th>Дата создания</th>
                         <th>Действия</th>
                     </thead>
@@ -21,6 +28,13 @@
                         <tr>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
+                            <td>
+                                @if(!empty($user->getRoleNames()))
+                                    @foreach($user->getRoleNames() as $roleName)
+                                        <span class="badge bg-info text-dark">{{ $roleName }}</span>
+                                    @endforeach
+                                @endif
+                            </td>
                             <td>{{$user->created_at}}</td>
                             <td class="d-flex">
                                 <a href="{{ route('user.edit', $user->id) }}" class="btn btn-secondary mx-2">Редактировать</a>

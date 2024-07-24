@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CartFilterRequest;
 use App\Models\Cart;
 use App\Models\Cash;
 use App\Models\Operation;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -19,10 +21,45 @@ class CartController extends Controller
      */
     public function index()
     {
-        $carts = Cart::query()
-            ->latest()
-            ->paginate(10);
+        $carts = Cart::all();
+        session(['carts_flash' => $carts]);
+        $carts = Cart::query()->latest()->paginate(10);
+
         return view('cart.index', compact('carts'));
+    }
+
+    public function filterCart(CartFilterRequest $request){
+        $data = $request->validated();
+
+        $query = Cart::query();
+
+        if (isset($data['product_id'])){
+            $query->where('product_id', $data['product_id']);
+        }
+
+        if (isset($data['dirt'])){
+            $query->where('dirt', $data['dirt']);
+        }
+
+        if (isset($data['date_from'])){
+            $query->whereDate('created_at', '>=', new Carbon($data['date_from']));
+        }
+
+        if (isset($data['date_to'])){
+            $query->whereDate('created_at', '<=', new Carbon($data['date_to']));
+        }
+
+        $carts = $query->paginate(10);
+        $carts_flash = $query->get();
+        session(['carts_flash' => $carts_flash]);
+//        dd($query->get(), $carts_flash);
+        return view('cart.index', compact('carts'));
+    }
+
+    public function exportCartExel(){
+
+        $carts = session('carts_flash');
+        return view('cart.export-cart-exel', compact('carts'));
     }
 
     /**

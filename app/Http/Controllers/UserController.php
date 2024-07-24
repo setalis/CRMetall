@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +20,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('users'))->with('status', "Новый пользователь создан");
     }
 
     /**
@@ -27,7 +28,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        $roles = Role::all();
+        return view('admin.users.create', compact('roles'));
     }
 
     /**
@@ -39,6 +41,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'roles' => 'required'
         ]);
 
         $user = User::create([
@@ -46,7 +49,11 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-        return redirect(route('admin.users', absolute: false));
+
+        $user->syncRoles($request->roles);
+//        dd($request, $user);
+
+        return redirect(route('admin.users', absolute: false))->with('status', "Новый пользователь создан");
     }
 
     /**
@@ -62,7 +69,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        $roles = Role::all();
+        $userRoles = $user->roles->pluck('name', 'name')->all();
+        return view('admin.users.edit', compact('user', 'roles', 'userRoles'));
     }
 
     /**
@@ -70,14 +79,27 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $data = $request->validate([
+        $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255',],
-            'password' => ['required', 'confirmed', ],
+            'password' => ['nullable', 'confirmed', ],
+            'roles' => 'required'
         ]);
 
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
+
+        if(!empty($request->password)){
+            $data += [
+                'password' => Hash::make($request->password),
+            ];
+        }
+
         $user ->update($data);
-        return redirect()->route('admin.users');
+        $user->syncRoles($request->roles);
+        return redirect()->route('admin.users')->with('status', "Информация о поользователе успешно обновлена");
     }
 
     /**
@@ -86,6 +108,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('admin.users');
+        return redirect()->route('admin.users')->with('status', "Новый пользователь создан");;
     }
 }

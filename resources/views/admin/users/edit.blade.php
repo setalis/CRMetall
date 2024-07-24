@@ -39,7 +39,7 @@
                             <div class="mb-3 row">
                                 <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="inputPassword" name="password" required autocomplete="new-password" value="">
+                                    <input type="password" class="form-control" id="inputPassword" name="password" autocomplete="new-password" value="">
                                     <span class="input-group-text" id="icon-password" >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
                                                 <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8m4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5"/>
@@ -48,13 +48,6 @@
                                         </span>
                                 </div>
                             </div>
-                            {{--                                <x-input-label for="password" :value="__('Password')" />--}}
-
-                            {{--                                <x-text-input id="password" class="form-control"--}}
-                            {{--                                              type="password"--}}
-                            {{--                                              name="password"--}}
-                            {{--                                              required autocomplete="new-password" />--}}
-
                             <x-input-error :messages="$errors->get('password')" class="mt-2" />
                         </div>
 
@@ -64,18 +57,28 @@
 
                             <x-text-input id="password_confirmation" class="form-control"
                                           type="password"
-                                          name="password_confirmation" required autocomplete="new-password" />
+                                          name="password_confirmation" autocomplete="new-password" />
 
                             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                         </div>
 
+                        <div class="mb-3">
+                            <label for="roles">Роли</label>
+                            <select name="roles[]" class="form-control" multiple id="roles">
+                                <option value="">Выбрать роль</option>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->name }}" {{ in_array($role->name, $userRoles) ? 'selected':'' }} >{{ $role->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="flex items-center justify-end mt-4">
                             <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                                {{ __('Already registered?') }}
+                                {{ __('Войти') }}
                             </a>
 
                             <x-primary-button class="ms-4">
-                                {{ __('123 Register') }}
+                                {{ __('Обновить пользователя') }}
                             </x-primary-button>
                         </div>
                     </div>
