@@ -32,11 +32,11 @@ Route::delete('permissions/{item}', [PermissionController::class, 'destroy'])->n
 
 // ----------------- Role -------------------- //
 Route::get('roles', [RoleController::class, 'index'])->name('role.index');
-Route::get('roles/create', [RoleController::class, 'create'])->name('role.create');
-Route::post('roles/store', [RoleController::class, 'store'])->name('role.store');
-Route::get('roles/{item}/edit', [RoleController::class, 'edit'])->name('role.edit');
-Route::patch('roles/{item}/update', [RoleController::class, 'update'])->name('role.update');
-Route::delete('roles/{item}', [RoleController::class, 'destroy'])->name('role.delete');
+Route::get('roles/create', [RoleController::class, 'create'])->name('role.create')->middleware('can:Создать роль');
+Route::post('roles/store', [RoleController::class, 'store'])->name('role.store')->middleware('can:Создать роль');
+Route::get('roles/{item}/edit', [RoleController::class, 'edit'])->name('role.edit')->middleware('can:Редактировать роль');
+Route::patch('roles/{item}/update', [RoleController::class, 'update'])->name('role.update')->middleware('can:Редактировать роль');
+Route::delete('roles/{item}', [RoleController::class, 'destroy'])->name('role.delete')->middleware('can:Удалить роль');;
 Route::get('roles/{item}/give-permissions', [RoleController::class, 'addPermissionToRole'])->name('add-permission-to-role');
 Route::patch('roles/{item}/give-permissions', [RoleController::class, 'givePermissionToRole'])->name('give-permission-to-role');
 
