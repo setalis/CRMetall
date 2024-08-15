@@ -9,16 +9,18 @@
                         </h4>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('role.store') }}" method="POST">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="name">Наименование</label>
-                                <input type="text" name="name" id="name" class="form-control" />
-                            </div>
-                            <div class="mb-3">
-                                <button type="submit" class="btn btn-info">Создать роль</button>
-                            </div>
-                        </form>
+                        @can('Создать роль')
+                            <form action="{{ route('role.store') }}" method="POST">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="name">Наименование</label>
+                                    <input type="text" name="name" id="name" class="form-control" />
+                                </div>
+                                <div class="mb-3">
+                                    <button type="submit" class="btn btn-info">Создать роль</button>
+                                </div>
+                            </form>
+                        @endcan
                     </div>
                 </div>
             </div>

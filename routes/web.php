@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CashController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OperationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
@@ -14,13 +15,17 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 
-Route::get('/', function () {
-    return view('admin.index');
-})->middleware(['auth', 'verified'])->name('dashboard');
+//Route::get('/', function () {
+//    return view('admin.index');
+//})->middleware(['auth', 'verified'])->name('dashboard');
+//
+//Route::get('/admin', function () {
+//    return view('admin.index');
+//})->middleware(['auth', 'verified'])->name('admin');
 
-Route::get('/admin', function () {
-    return view('admin.index');
-})->middleware(['auth', 'verified'])->name('admin');
+Route::get('/admin', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/admin', [DashboardController::class, 'index'])->name('admin');
+Route::get('/', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 // ----------------- Permission -------------------- //
 Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
@@ -97,3 +102,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+
+

@@ -102,7 +102,7 @@ class OperationController extends Controller
             $old_weight = $item->weight_stock;
 
             $item->id = $carts[$key]->id;
-            $item->uniq_id= $uniq_id[$key];
+            $item->uniq_id = $uniq_id[$key];
             $item->operation_id = $operation_id;
             $item->cart_id = $cart_id;
             $item->product_id = $product_id[$key];

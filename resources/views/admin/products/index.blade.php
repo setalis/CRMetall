@@ -1,16 +1,21 @@
 <x-app-layout>
     <div class="container-fliud m-3">
         <div class="row">
-            <div>
-                <h1>Прайс-лист металлов</h1>
-                <button class="btn btn-primary mb-3" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"> Добавить металл </button>
-
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h1 class="align-items-center mb-0">Прайс-лист металлов</h1>
+                </div>
+                <div class="d-flex align-items-center">
+                    @can('Создать товар')
+                        <button class="btn btn-primary float-end align-self-center" href="#" data-bs-toggle="modal" data-bs-target="#roleModal"> Добавить металл </button>
+                    @endcan
+                </div>
                 <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить новый эллемент в справочник металла</h1>
+                                <h1 class="modal-title fs-5" id="roleModalLabel">Добавить новый эллемент в справочник металла</h1>
 
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
@@ -97,8 +102,8 @@
                     <table class="table table-hover table-sm rounded">
                     <thead class="table-secondary">
                     <th class="border-0 rounded-start">Изображение</th>
-                    <th>Наименование</th>
-                    <th>Цена покупки</th>
+                    <th class="w-25">Наименование</th>
+                    <th class="w-auto">Цена покупки</th>
                     <th>Цена продажи</th>
                     <th>Засор</th>
                     <th>Состояние</th>
@@ -135,13 +140,16 @@
                                         </a>
                                     </div>
                                     <div class="p-1">
-                                        <a href = "{{ route('product.edit', $product->id) }}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill=#7b8189 class="bi bi-pencil" viewBox="0 0 20 20">
-                                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-                                            </svg>
-                                        </a>
+                                        @can('Редактировать товар')
+                                            <a href = "{{ route('product.edit', $product->id) }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill=#7b8189 class="bi bi-pencil" viewBox="0 0 20 20">
+                                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                                                </svg>
+                                            </a>
+                                        @endcan
                                     </div>
                                     <div class="p-1">
+                                        @can('Удалить товар')
                                         <form action=" {{ route('products.delete', $product->id) }}" method="post">
                                             @csrf
                                             @method('delete')
@@ -152,6 +160,7 @@
                                                 </svg>
                                             </button>
                                         </form>
+                                        @endcan
                                     </div>
                                 </div>
                             </td>

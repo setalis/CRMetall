@@ -15,21 +15,21 @@ $sheet->setTitle('Sheet 1'); // This is where you set the title
 $sheet->setCellValue('A1', 'ID'); // This is where you set the column header
 $sheet->setCellValue('B1', 'Наименование');// This is where you set the column header
 $sheet->setCellValue('C1', 'Цена');// This is where you set the column header
-$sheet->setCellValue('D1', 'Засор');// This is where you set the column header
-$sheet->setCellValue('E1', 'Вес');// This is where you set the column header
+$sheet->setCellValue('D1', 'Вес');// This is where you set the column header
+$sheet->setCellValue('E1', 'Засор');// This is where you set the column header
 $row = 2;// Initialize row counter
 
 foreach ($carts as $item) {
     $sheet->setCellValue('A' . $row, $item->id);
     $sheet->setCellValue('B' . $row, $item->name);
     $sheet->setCellValue('C' . $row, $item->price);
-    $sheet->setCellValue('D' . $row, $item->dirt);
-    $sheet->setCellValue('E' . $row, (-$item->weight_stock));
+    $sheet->setCellValue('D' . $row, $item->weight_stock);
+    $sheet->setCellValue('E' . $row, $item->dirt);
     $row++;
 }
 
-$sheet->setCellValue('A'.$row, 'cevvf');
-$sheet->setCellValue('E'.$row, '=SUM(E2:E'.($row-1).')');
+$sheet->setCellValue('C'.$row, 'Итого:');
+$sheet->setCellValue('D'.$row, '=SUM(D2:D'.($row-1).')');
 
 // // This is the loop to populate data
 // for ($i=1; $i < 5; $i++) {
@@ -39,7 +39,7 @@ $sheet->setCellValue('E'.$row, '=SUM(E2:E'.($row-1).')');
 
 // }
 $writer = new Xlsx($spreadsheet);
-$fileName = "Your First Excel Exported From Laravel.xlsx";
+$fileName = "export-operation.xlsx";
 header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 header("Content-Disposition: attachment;filename=\"$fileName\"");
 $writer->save("php://output");
