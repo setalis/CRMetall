@@ -25,7 +25,8 @@
                                 <th>ID</th>
                                 <th>Наименование</th>
                                 <th>Разрешения</th>
-                                <th>Действия</th>
+                                <th>Действия с разрешениями</th>
+                                <th>Действия с ролями</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -43,11 +44,13 @@
                                                     <span class="badge bg-info m-1">{{ $permission->name }}</span>
                                                 @endforeach
                                             </div>
-                                            <div class="col-md-4 d-flex align-items-center">
-                                                <a href="{{ route('add-permission-to-role', $item->id) }}" class="btn btn-warning me-2">Добавить/Редактировать разрешения</a>
-                                            </div>
-                                        </div>
 
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-md-4 d-flex align-items-center">
+                                            <a href="{{ route('add-permission-to-role', $item->id) }}" class="btn btn-warning me-2">Добавить/Редактировать разрешения</a>
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="d-flex">

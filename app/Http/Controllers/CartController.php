@@ -30,11 +30,15 @@ class CartController extends Controller
 
     public function filterCart(CartFilterRequest $request){
         $data = $request->validated();
-
+//        dd($data);
         $query = Cart::query();
 
         if (isset($data['product_id'])){
             $query->where('product_id', $data['product_id']);
+        }
+
+        if (isset($data['user_id'])){
+            $query->where('user_id', $data['user_id']);
         }
 
         if (isset($data['dirt'])){
@@ -86,6 +90,7 @@ class CartController extends Controller
     public function store(Request $request)
     {
         $user_id = $request->user_id;
+//        dd($user_id);
         $type = $request->type;
         $client = $request->client;
         $uniq_id = $request->uniq_id;
@@ -113,7 +118,6 @@ class CartController extends Controller
         ]);
 
         for($i = 0; $i < count($name); $i++){
-
             $cart = Cart::create([
                 'operation_id' => $operation->id,
                 'product_id' => $product_id[$i],
@@ -125,6 +129,7 @@ class CartController extends Controller
                 'weight' => $weight[$i],
                 'weight_stock' => $weight_stock[$i],
                 'sum' => $sum[$i],
+                'user_id' => $user_id[$i],
             ]);
 //            dd($cart);
             $product = Product::find($product_id[$i]);

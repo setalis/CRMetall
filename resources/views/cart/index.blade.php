@@ -121,17 +121,17 @@
                                     @else
                                         <span class="badge bg-danger">Продажа</span>
                                     @endif
-
                                 </td>
                                 <td>{{ $cart->weight }}</td>
                                 <td>{{ $cart->dirt }}</td>
                                 <td>{{ $cart->weight_stock }}</td>
                                 <td>{{ $cart->sum }}</td>
                                 @php
-                                    $cart->operation->user_id;
-                                    $user = \App\Models\User::find($cart->operation->user_id);
+
+                                    $user_cart = \App\Models\User::find($cart->user_id);
                                 @endphp
-                                <td>{{ $user->name }}</td>
+
+                                <td>{{$user_cart['name']}}</td>
                             </tr>
                         @endforeach
                         </tbody>

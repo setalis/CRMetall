@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('weight')->nullable();
             $table->string('weight_stock')->nullable();
             $table->string('sum')->nullable();
+            $table->string('user_id')->nullable();
             $table->timestamps();
         });
     }

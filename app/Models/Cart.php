@@ -21,6 +21,7 @@ class Cart extends Model
         'weight',
         'weight_stock',
         'sum',
+        'user_id'
     ];
 
     public function operation(): BelongsTo

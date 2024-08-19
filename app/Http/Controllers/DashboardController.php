@@ -15,10 +15,8 @@ class DashboardController extends Controller
         $cash = Cash::all()->last();
         $products = Product::query()->paginate(10);
         $operations = Operation::query()->latest();
-        $currentDate = Carbon::now();
         $carts = Cart::query()->whereDate('created_at', '=', Carbon::now())->get();
-        $operations_day = $operations->whereDate('created_at', '=', Carbon::now())->get();
-        dump($operations_day);
+        $operations_day = Operation::query()->whereDate('created_at', '=', Carbon::now())->get();
         $productsStatistic = collect([]);
         $cashDay = collect([]);
 
@@ -59,17 +57,7 @@ class DashboardController extends Controller
             }
         }
 
-    // -------------  Cash day -----------------//
 
-
-
-//        foreach ($carts as $item){
-//            $prod = $productsStatistic->where('id', $item->product_id);
-//            dd($prod);
-//            $prod->weight = $prod->weight + $item->weight;
-//        }
-
-//        dump($productsStatistic);
         return view('admin.index', compact('cash', 'products', 'operations', 'productsStatistic', 'carts', 'operations_day'));
     }
 }

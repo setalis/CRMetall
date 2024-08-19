@@ -7,6 +7,7 @@ use App\Http\Controllers\OperationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/admin', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/admin', [DashboardController::class, 'index'])->name('admin');
 Route::get('/', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/report', [ReportController::class, 'index'])->name('report.index');
+Route::get('/report/filter', [ReportController::class, 'reportFilter'])->name('report.filter');
 
 // ----------------- Permission -------------------- //
 Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
