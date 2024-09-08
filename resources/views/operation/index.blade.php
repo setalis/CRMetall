@@ -45,6 +45,8 @@
                                         <span class="badge bg-info">Пополнение средств</span>
                                     @elseif ($operation->type == 4)
                                         <span class="badge bg-danger">Снятие средств</span>
+                                    @elseif ($operation->type == 5)
+                                        <span class="badge bg-black">Перемещение</span>
                                     @endif
                                 </td>
                                 <td>
@@ -62,6 +64,27 @@
                                                 </tr>
                                             @endforeach
                                         </table>
+                                    @elseif($operation->type == 5)
+                                        @php
+                                            $int = $operation->products;
+                                            $invent = json_decode($int);
+                                        @endphp
+                                    <table class="table">
+                                        <thead @class('table-secondary')>
+                                            <tr>
+                                                <th>Из</th>
+                                                <th>В</th>
+                                                <th>Вес</th>
+                                            </tr>
+                                        </thead>
+                                        @foreach($invent as $item)
+                                            <tr>
+                                                <td>{{ $item->product_from  }}</td>
+                                                <td>{{ $item->product_in }}</td>
+                                                <td>{{ $item->weight }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
                                     @else
                                         Без товаров
                                     @endif

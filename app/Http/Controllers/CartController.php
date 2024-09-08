@@ -8,6 +8,7 @@ use App\Models\Cash;
 use App\Models\Operation;
 use App\Models\Product;
 use Carbon\Carbon;
+use Faker\Provider\cs_CZ\DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -129,7 +130,7 @@ class CartController extends Controller
                 'weight' => $weight[$i],
                 'weight_stock' => $weight_stock[$i],
                 'sum' => $sum[$i],
-                'user_id' => $user_id[$i],
+                'user_id' => $user_id,
             ]);
 //            dd($cart);
             $product = Product::find($product_id[$i]);
@@ -239,7 +240,7 @@ class CartController extends Controller
 
     public function deleteItem($id)
     {
-    dd($id);
+//    dd($id);
         if($id){
             $cart = session()->get('cart');
 
@@ -249,22 +250,6 @@ class CartController extends Controller
             }
             session()->flash('success', 'Product successfully deleted.');
         }
-
-
-
-
-//        dump(session()->get('cart'));
-//        dd(session()->get('cart'));
-//        if($idItem) {
-//            $currentCartId = session()->get('currentCartId');
-//            $cart = session()->get('cart');
-//            dd($cart, $idItem['id-item']);
-//            dd(isset($cart[$idItem['id-item']]));
-//            if(isset($cart[$idItem['id-item']])) {
-//                unset($cart[$idItem['id-item']]);
-//                session()->put('cart', $cart);
-//            }
-//        }
         return redirect()->back();
     }
 }

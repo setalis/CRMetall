@@ -3,12 +3,14 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CashController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\OperationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +32,7 @@ Route::get('/', [DashboardController::class, 'index'])->middleware(['auth', 'ver
 
 Route::get('/report', [ReportController::class, 'index'])->name('report.index');
 Route::get('/report/filter', [ReportController::class, 'reportFilter'])->name('report.filter');
+Route::get('/report/export', [ReportController::class, 'exportReportExel'])->name('report.export');
 
 // ----------------- Permission -------------------- //
 Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
@@ -89,6 +92,12 @@ Route::middleware('auth')->group(function () {
     // ------------------ Storage ---------------- //
     Route::get('admin/stock', [ProductController::class, 'stock'])->name('stock.index');
     Route::get('admin/stock/{id}/reset', [ProductController::class, 'resetCount'])->name('stock.reset');
+    Route::post('admin/stock/move-metal', [ProductController::class, 'addMetallDell'])->name('stock.move-metal');
+
+    // ------------------ Shipment ---------------- //
+    Route::get('admin/shipment', [ShipmentController::class, 'index'])->name('shipment.index');
+    Route::get('admin/shipment/create', [ShipmentController::class, 'create'])->name('shipment.create');
+    Route::post('admin/shipment/store', [ShipmentController::class, 'store'])->name('shipment.store');
 
     // ------------------ Cash ---------------- //
     Route::get('admin/cash', [CashController::class, 'index'])->name('cash.index');
@@ -96,6 +105,15 @@ Route::middleware('auth')->group(function () {
     Route::get('admin/cash/{item}/edit', [CashController::class, 'edit'])->name('cash.edit');
     Route::patch('admin/cash/{item}', [CashController::class, 'update'])->name('cash.update');
     Route::delete('admin/cash/{item}', [CashController::class, 'destroy'])->name('cash.delete');
+
+    // ------------------ Inventory ---------------- //
+    Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::get('inventory/{item}', [InventoryController::class, 'show'])->name('inventory.show');
+    Route::get('admin/inventory/create', [InventoryController::class, 'create'])->name('inventory.create');
+    Route::post('inventory', [InventoryController::class, 'store'])->name('inventory.store');
+    Route::get('inventory/{item}/edit', [InventoryController::class, 'edit'])->name('inventory.edit');
+    Route::patch('inventory/{item}', [InventoryController::class, 'update'])->name('inventory.update');
+    Route::delete('inventory/{item}', [InventoryController::class, 'destroy'])->name('inventory.delete');
 
 });
 

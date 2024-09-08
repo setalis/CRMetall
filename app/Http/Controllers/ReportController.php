@@ -44,7 +44,19 @@ class ReportController extends Controller
                     } else if($cart->operation->type == 2) {
                         $item['weight_minus'] += $cart->weight_stock;
                     }
-//                    $item['weight'] = $item['weight_plus'] - $item['weight_minus'];
+                    else if($cart->operation->type == 5) {
+                        $operation_move = $cart->operation;
+                        $int = $operation_move->products;
+                        $invent = json_decode($int);
+                        foreach ($invent as $item_move){
+                            if($item_move->product_from == $item['name']){
+                                $item['weight_minus'] += $cart->weight_stock;
+                            } elseif ($item_move->product_in == $item['name']){
+                                $item['weight_plus'] += $cart->weight_stock;
+                            }
+                        }
+
+                    }
                     $pr = $productsStatistic[$key];
                     $pr['weight_all'] = $item['weight_plus'] - $item['weight_minus'];
                     $pr['weight_plus'] = $item['weight_plus'];
@@ -53,9 +65,6 @@ class ReportController extends Controller
                 }
             }
         }
-
-
-
         return view('report.index', compact('operations', 'cashes', 'carts', 'productsStatistic'));
     }
 
@@ -82,7 +91,12 @@ class ReportController extends Controller
         }
 
         $carts = $query->paginate(10);
+        $carts_flash = $query->get();
+        session(['carts_flash' => $carts_flash]);
+
         $operations = $query_operations->paginate(10);
+        $operations_flash = $query_operations->get();
+        session(['operations_flash' => $operations_flash]);
 
         $cashes = Cash::all();
         $products = Product::query()->paginate(10);
@@ -101,11 +115,7 @@ class ReportController extends Controller
                     'weight_all' => 0,
                 ]
             );
-            $cashDay->push([
-
-            ]);
         }
-        $cashDay = 0;
         foreach ($productsStatistic as $key => $item)
         {
             foreach ($carts as $cart)
@@ -126,6 +136,17 @@ class ReportController extends Controller
                 }
             }
         }
-        return view('report.index', compact('operations', 'cashes', 'productsStatistic', 'operations_day'));
+        session(['productsStatistic_flash' => $productsStatistic]);
+//        dump(session('operations_flash'));
+//        dump(session('carts_flash'));
+//        dd(session('productsStatistic_flash'));
+        return view('report.index', compact('operations', 'cashes', 'productsStatistic', 'operations_day', 'data'));
+    }
+
+    public function exportReportExel(){
+        $carts = session('carts_flash');
+        $operations = session('operations_flash');
+        $productsStatistic = session('productsStatistic_flash');
+        return view('report.export-report-exel', compact('carts', 'operations', 'productsStatistic'));
     }
 }

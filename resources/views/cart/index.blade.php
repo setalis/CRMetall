@@ -72,11 +72,11 @@
                                 </div>
                                 <div class="col">
                                     <label for="" class="form-label" >Дата, от</label>
-                                    <input type="date" class="form-control" placeholder="" aria-label="Date from" name="date_from">
+                                    <input type="datetime-local" class="form-control" placeholder="" aria-label="Date from" name="date_from">
                                 </div>
                                 <div class="col">
                                     <label for="" class="form-label">Дата, до</label>
-                                    <input type="date" class="form-control" placeholder="" aria-label="Date to" name="date_to">
+                                    <input type="datetime-local" class="form-control" placeholder="" aria-label="Date to" name="date_to">
                                 </div>
                                 <div class="col">
                                     <label for="" class="form-label">Фильтрация по параметрам</label>
@@ -118,8 +118,10 @@
                                 <td>
                                     @if($cart->operation->type == 1)
                                         <span class="badge bg-success">Покупка</span>
-                                    @else
+                                    @elseif($cart->operation->type == 2)
                                         <span class="badge bg-danger">Продажа</span>
+                                    @elseif($cart->operation->type == 5)
+                                        <span class="badge bg-black">Перемещение</span>
                                     @endif
                                 </td>
                                 <td>{{ $cart->weight }}</td>

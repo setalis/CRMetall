@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
+use App\Models\Operation;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -156,4 +158,77 @@ class ProductController extends Controller
         $product->save();
         return redirect()->route('stock.index');
     }
+
+    public function addMetallDell(Request $request)
+    {
+//        dd($request);
+        $data = request()->validate([
+            'type' => '',
+            'from_id' => '',
+            'in_id' => '',
+            'weight' => 'required',
+            'comment' => 'text',
+        ]);
+
+        $from_id = intval($data['from_id']);
+        $in_id = intval($data['in_id']);
+        $product_from = Product::find($from_id);
+        $product_in = Product::find($in_id);
+        $product_from->count = $product_from->count - $data['weight'];
+        $product_in->count = $product_in->count + $data['weight'];
+        $product_from->save();
+        $product_in->save();
+
+        $products_move = collect([]);
+        $products_move->push([
+            'product_from' => $product_from->name,
+            'product_in' => $product_in->name,
+            'weight' => $data['weight'],
+        ]);
+
+        $user_id = $request->user_id;
+        $comment = $request->comment;
+        $operation = Operation::create([
+            'type' => $data['type'],
+            'user_id' => $user_id,
+            'cart_id' => '',
+            'products' => $products_move,
+            'sum' => '',
+            'comment' => $comment,
+            'status' => '',
+        ]);
+
+
+
+        $cart = Cart::create([
+            'operation_id' => $operation->id,
+            'cart_id' => '',
+            'uniq_id' => '',
+            'product_id' => $data['from_id'],
+            'name' => $product_from->name,
+            'price' => '',
+            'dirt' => '',
+            'weight' => $data['weight'],
+            'weight_stock' => $data['weight'],
+            'sum' => '',
+            'user_id' => $user_id,
+        ]);
+
+        Cart::create([
+            'operation_id' => $operation->id,
+            'cart_id' => '',
+            'uniq_id' => '',
+            'product_id' => $data['in_id'],
+            'name' => $product_in->name,
+            'price' => '',
+            'dirt' => '',
+            'weight' => $data['weight'],
+            'weight_stock' => $data['weight'],
+            'sum' => '',
+            'user_id' => $user_id,
+        ]);
+
+        return redirect()->route('stock.index');
+    }
+
 }

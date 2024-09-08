@@ -215,16 +215,17 @@
                             <a href="{{ route('stock.index') }}" class="btn btn-sm btn-primary">Весь склад</a>
                         </div>
                         <div class="card-body">
-                            <table class="table">
-                                <thead>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
                                     <tr>
                                         <th>Наименование</th>
                                         <th>Покупка</th>
                                         <th>Продажа</th>
                                         <th>Итого</th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     @foreach($productsStatistic as $prS)
                                         <tr>
                                             <td>{{ $prS['name'] }}</td>
@@ -233,8 +234,10 @@
                                             <td>{{ $prS['weight_all'] }}</td>
                                         </tr>
                                     @endforeach
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
+
 
                         </div>
                     </div>
@@ -275,14 +278,15 @@
                             @endphp
                         @endforeach
                         <div class="card-body">
-                            <table class="table">
-                                <thead>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
                                     <tr>
                                         <th>Операция</th>
                                         <th>Сумма</th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     <tr>
                                         <td>Покупка металла</td>
                                         <td>{{ $cash_bay }}</td>
@@ -299,14 +303,15 @@
                                         <td>Снятие средств из кассы</td>
                                         <td>{{ $cash_minus }}</td>
                                     </tr>
-                                </tbody>
-                                <tfoot>
+                                    </tbody>
+                                    <tfoot>
                                     <tr>
                                         <td>Итого:</td>
                                         <td>{{ $cash_day }}</td>
                                     </tr>
-                                </tfoot>
-                            </table>
+                                    </tfoot>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

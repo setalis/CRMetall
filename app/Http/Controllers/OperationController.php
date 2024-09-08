@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 
 class OperationController extends Controller
 {
+    protected $casts = [
+        'products' => 'array'
+    ];
+
     /**
      * Display a listing of the resource.
      */
@@ -174,6 +178,21 @@ class OperationController extends Controller
                     $product->count = $product->count + $item->weight;
                     $product->save();
                 }
+                if($operation->type == 5){
+                    $int = $operation->products;
+                    $invent = json_decode($int);
+                    foreach ($invent as $item_move){
+                        if($item_move->product_from == $item->name){
+                            $product->count = $product->count + $item->weight;
+                            $product->save();
+                        }
+                        if($item_move->product_in == $item->name){
+                            $product->count = $product->count - $item->weight;
+                            $product->save();
+                        }
+                    }
+//                    $product->save();
+                }
             }
         }
         catch (Exception $e){
@@ -181,7 +200,9 @@ class OperationController extends Controller
         }
 
         $currentCash = Cash::all()->last();
-        $currentCash->summmary_cash =- $operation->sum;
+        if (isset($currentCash->summmary_cash)){
+            $currentCash->summmary_cash =- $operation->sum;
+        }
 
         $operation->delete();
 

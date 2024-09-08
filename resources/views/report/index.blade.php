@@ -7,7 +7,7 @@
             </div>
             <div class="col">
                 <div class="d-flex align-items-center justify-content-end" style="height: 100%">
-                    <a href="{{ route('cart.create') }}" class="btn btn-primary">Новый заказ</a>
+                    <a href="{{ route('report.export') }}" class="btn btn-primary">Экспортировать отчет</a>
                 </div>
 
             </div>
@@ -19,11 +19,11 @@
                         <div class="row">
                             <div class="col">
                                 <label for="" class="form-label" >Дата, от</label>
-                                <input type="date" class="form-control" placeholder="" aria-label="Date from" name="date_from">
+                                <input type="datetime-local" class="form-control" placeholder="" aria-label="Date from" name="date_from" value="@if(isset($data)){{$data['date_from']}}@endif">
                             </div>
                             <div class="col">
                                 <label for="" class="form-label">Дата, до</label>
-                                <input type="date" class="form-control" placeholder="" aria-label="Date to" name="date_to">
+                                <input type="datetime-local" class="form-control" placeholder="" aria-label="Date to" name="date_to"  value="@if(isset($data)){{$data['date_to']}}@endif">
                             </div>
                             <div class="col">
                                 <label for="" class="form-label">Фильтрация по параметрам</label>
@@ -32,7 +32,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="row">
+                <div class="row g-2">
                     <div class="col mx-0 px-0">
                         <div class="card mb-3 p-3">
                             <table class="table">
@@ -88,41 +88,41 @@
                             @endphp
                         @endforeach
 
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <table class="table">
-                                    <thead class="table-warning">
-                                    <tr>
-                                        <th>Операция</th>
-                                        <th>Сумма</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>Покупка металла</td>
-                                        <td>{{ $cash_bay }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Продажа металла</td>
-                                        <td>{{ $cash_sell }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Пополнение кассы</td>
-                                        <td>{{ $cash_plus }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Снятие средств из кассы</td>
-                                        <td>{{ $cash_minus }}</td>
-                                    </tr>
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <td>Итого:</td>
-                                        <td>{{ $cash_day }}</td>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
+                        <div class="card mb-3 p-3 ">
+
+                            <table class="table">
+                                <thead class="table-warning">
+                                <tr>
+                                    <th>Операция</th>
+                                    <th>Сумма</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>Покупка металла</td>
+                                    <td>{{ $cash_bay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Продажа металла</td>
+                                    <td>{{ $cash_sell }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Пополнение кассы</td>
+                                    <td>{{ $cash_plus }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Снятие средств из кассы</td>
+                                    <td>{{ $cash_minus }}</td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td>Итого:</td>
+                                    <td>{{ $cash_day }}</td>
+                                </tr>
+                                </tfoot>
+                            </table>
+
                         </div>
 
 

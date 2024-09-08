@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('type');
             $table->foreignId('user_id')->nullable();
             $table->foreignId('cart_id')->nullable();
-            $table->string('products')->nullable();
+            $table->json('products')->nullable();
             $table->decimal('sum',10,2)->nullable();
             $table->text('comment')->nullable(true);
             $table->tinyInteger('status')->nullable(false)->default(0);

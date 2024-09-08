@@ -4,6 +4,7 @@
             <div>
                 <h1>Прайс-лист металлов</h1>
                 <button class="btn btn-primary mb-3" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"> Добавить металл </button>
+                <button class="btn btn-primary mb-3" href="#" data-bs-toggle="modal" data-bs-target="#addMetallDellModal"> Отложить в деловой металл </button>
 
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -89,6 +90,59 @@
                             reader.readAsDataURL(input.files[0]);
                         }
                     </script>
+                </div>
+
+                <div class="modal fade" id="addMetallDellModal" tabindex="-1" aria-labelledby="addMetallDellModal" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Отложить металл в деловой</h1>
+
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action=" {{ route('stock.move-metal') }}" method="POST" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    @csrf
+                                    <div class="row">
+                                        <input type="hidden" class="form-control" id="" placeholder="" name = "type" value = "5">
+                                        <input type="hidden" class="form-control" id="" placeholder="" name = "user_id" value = "{{ Auth::user()->id }}">
+                                        <div class="col-md-5">
+                                            <select class="form-select" aria-label="Default select example" name = "from_id">
+                                                <option selected>Open this select menu</option>
+                                                @foreach($products as $item)
+                                                    <option value="{{$item->id}}">{{ $item->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <select class="form-select" aria-label="Default select example" name = "in_id">
+                                                <option selected>Open this select menu</option>
+                                                @foreach($products as $item)
+                                                    <option value="{{$item->id}}">{{ $item->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label for="exampleFormControlInput1" class="form-label">Сколько металла отложить в деловой</label>
+                                                <input type="number" class="form-control" id="exampleFormControlInput1" placeholder="Кол-во металла" name = "weight">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="row">
+                                        <div class="col my-3">
+                                            <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn btn-secondary m-2" data-bs-dismiss="modal">Закрыть</button>
+                                            <button type="submit" class="btn btn-primary m-2">Сохранить новый эллемент</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
             </div>

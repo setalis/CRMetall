@@ -21,9 +21,9 @@ class CashController extends Controller
 
         foreach ($operations as $item_operation){
             if($item_operation->type == 1){
-                $sum_cash =- $item_operation->sum;
+                $sum_cash =- floatval($item_operation->sum);
             } else {
-                $sum_cash =+ $item_operation->sum;
+                $sum_cash =+ floatval($item_operation->sum);
             }
         }
 
