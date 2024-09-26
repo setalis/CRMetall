@@ -122,6 +122,8 @@
                                         <span class="badge bg-danger">Продажа</span>
                                     @elseif($cart->operation->type == 5)
                                         <span class="badge bg-black">Перемещение</span>
+                                    @elseif($cart->operation->type == 6)
+                                        <span class="badge bg-secondary">Отгрузка</span>
                                     @endif
                                 </td>
                                 <td>{{ $cart->weight }}</td>

@@ -7,8 +7,8 @@ use App\Models\Cart;
 use App\Models\Cash;
 use App\Models\Operation;
 use App\Models\Product;
+use App\Models\Shipment;
 use Carbon\Carbon;
-use Faker\Provider\cs_CZ\DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -118,6 +118,8 @@ class CartController extends Controller
             'status' => $status,
         ]);
 
+        $shipment_items = collect([]);
+
         for($i = 0; $i < count($name); $i++){
             $cart = Cart::create([
                 'operation_id' => $operation->id,
@@ -132,19 +134,32 @@ class CartController extends Controller
                 'sum' => $sum[$i],
                 'user_id' => $user_id,
             ]);
+
+            $shipment_items->push([
+                'shipmentProducts' => $product_id[$i],
+                'weightShipmentProduct' => $weight[$i],
+            ]);
+
+
 //            dd($cart);
             $product = Product::find($product_id[$i]);
 
             if($type == 1){
                 $product->count = $product->count + $cart->weight_stock;
             }
-            if($type == 2){
+            if($type == 2 || $type == 6 ){
                 $product->count = $product->count - $cart->weight_stock;
             }
             $product->save();
 
 
         }
+        if($type == 6){
+            $shipment = Shipment::create([
+                'items' => $shipment_items,
+            ]);
+        }
+
 
         $cash_last = Cash::all()->last();
         $summary_cash = 0;
@@ -162,13 +177,21 @@ class CartController extends Controller
             }
 
         }
+        if ($type != 6){
+            $cash = Cash::create([
+                'type_operation' => $type,
+                'sum_operation' => $sumCart,
+                'summary_cash' => $summary_cash,
+                'operation_id' => $operation->id,
+            ]);
+        }
 
-        $cash = Cash::create([
-            'type_operation' => $type,
-            'sum_operation' => $sumCart,
-            'summary_cash' => $summary_cash,
-            'operation_id' => $operation->id,
-        ]);
+//        if ($type != 6){
+//            $shipment = Shipment::create([
+//                'items' =>
+//            ]);
+//        }
+
 
         $operations = Operation::query()
             ->latest()

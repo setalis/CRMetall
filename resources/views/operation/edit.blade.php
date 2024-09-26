@@ -80,6 +80,7 @@
                                             name="type">
                                         <option value="1" @if($operation->type == 1) selected @endif >Покупка</option>
                                         <option value="2" @if($operation->type == 2) selected @endif >Продажа</option>
+                                        <option value="6" @if($operation->type == 6) selected @endif >Отгрузка</option>
                                     </select>
                                 </div>
                                 <div class="">

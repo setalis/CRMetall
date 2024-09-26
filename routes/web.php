@@ -12,6 +12,9 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\UserController;
+use App\Livewire\Shipment;
+use App\Livewire\ShipmentCalculate;
+use App\Livewire\ShipmentCreate;
 use Illuminate\Support\Facades\Route;
 
 //Route::get('/', function () {
@@ -98,6 +101,12 @@ Route::middleware('auth')->group(function () {
     Route::get('admin/shipment', [ShipmentController::class, 'index'])->name('shipment.index');
     Route::get('admin/shipment/create', [ShipmentController::class, 'create'])->name('shipment.create');
     Route::post('admin/shipment/store', [ShipmentController::class, 'store'])->name('shipment.store');
+
+    Route::get('/admin/shipment-livewire', Shipment::class)->name('shipment.livewire');
+    Route::get('/admin/shipment-livewire/create', ShipmentCreate::class)->name('shipment.create.livewire');
+    Route::get('/admin/shipment-calculate/{item}', [ShipmentController::class, 'calculate'])->name('shipment.calculate');
+
+    Route::get('/admin/shipment/calculate/{item}', ShipmentCalculate::class)->name('shipment.calc.livewire');
 
     // ------------------ Cash ---------------- //
     Route::get('admin/cash', [CashController::class, 'index'])->name('cash.index');

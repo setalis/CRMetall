@@ -44,7 +44,7 @@
     <main class="content">
         @include('layouts.navbar')
         {{ $slot }}
-        @include('layouts.footer')
+{{--        @include('layouts.footer')--}}
     </main>
 
     <!-- Core -->

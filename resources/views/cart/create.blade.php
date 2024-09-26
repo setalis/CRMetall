@@ -79,6 +79,7 @@
                                             name="type">
                                         <option value="1">Покупка</option>
                                         <option value="2">Продажа</option>
+                                        <option value="6">Отгрузка</option>
                                     </select>
                                 </div>
                                 <div class="">
@@ -245,6 +246,7 @@
             // console.log(summCartInput);
             cart.forEach((item) => {
                 let rowItem = document.createElement('tr');
+                let typeOperation = document.querySelector('#typeOperation');
                 let sum = item.price_buy * (item.weight - ((item.weight / 100) * item.dirt));
                 let weightStock = item.weight - (item.weight/100 * item.dirt);
                 summaryCart = summaryCart + sum;
